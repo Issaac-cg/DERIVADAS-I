@@ -3,148 +3,88 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Calculadora de Derivadas - Paso a Paso</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<title>NaraNova Jabón Natural de Naranja</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        color: #4B3B0A;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #f37f20;
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #fff9f0;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+    h2 {
+        color: #d2691e;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        margin: 15px 0;
+        font-size: 1.1em;
+    }
+    .ingredient {
+        font-weight: bold;
+        color: #e25822;
+    }
+    .benefit {
+        font-style: italic;
+        color: #6b4f01;
+    }
+    .images {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+    .images img {
+        max-width: 150px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    footer {
+        text-align: center;
+        margin: 30px 0 10px 0;
+        font-size: 0.9em;
+        color: #7a4a0e;
+    }
+</style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-8 font-sans">
-
-  <h1 class="text-4xl font-bold text-center mb-8">Calculadora de Derivadas</h1>
-
-  <form id="form" class="bg-white p-6 rounded shadow-md w-full max-w-xl space-y-6">
-    <div>
-      <label for="funcion" class="block mb-2 font-semibold">Función f(x):</label>
-      <input id="funcion" type="text" placeholder="Ejemplo: x^3 + 2*x^2 - 5*x + 7" required
-        class="w-full border rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
+<body>
+<header>NaraNova - Jabón Natural de Naranja</header>
+<div class="container">
+    <h2>Ingredientes y Beneficios</h2>
+    <ul>
+        <li><span class="ingredient">Aceite esencial de naranja:</span> <span class="benefit">Antiséptico natural, ayuda a revitalizar la piel y tiene propiedades antioxidantes.</span></li>
+        <li><span class="ingredient">Glicerina:</span> <span class="benefit">Hidrata profundamente y suaviza la piel, ayudando a retener la humedad natural.</span></li>
+        <li><span class="ingredient">Avena:</span> <span class="benefit">Calma la piel irritada, exfolia suavemente y aporta nutrientes esenciales.</span></li>
+        <li><span class="ingredient">Ralladura de naranja:</span> <span class="benefit">Exfoliante natural que rejuvenece la piel y mejora su textura.</span></li>
+        <li><span class="ingredient">Agua destilada:</span> <span class="benefit">Purifica y ayuda a mantener la fórmula limpia y suave.</span></li>
+        <li><span class="ingredient">Fragancia natural:</span> <span class="benefit">Aporta un aroma fresco y saludable sin químicos agresivos.</span></li>
+        <li><span class="ingredient">Colorante vegetal:</span> <span class="benefit">Seguro y natural, mejora la apariencia del jabón sin dañar la piel.</span></li>
+    </ul>
+    <div class="images">
+        <img src="https://images.unsplash.com/photo-1601758064228-49a79a6fe8b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Jabones naturales" />
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Naranjas" />
+        <img src="https://images.unsplash.com/photo-1504639725599-367ace7f7d4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Avena" />
     </div>
-    <div>
-      <label for="variable" class="block mb-2 font-semibold">Variable:</label>
-      <input id="variable" type="text" value="x" required
-        class="w-24 border rounded px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-600" />
-    </div>
-    <button type="submit" class="w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition">Calcular Derivada</button>
-  </form>
-
-  <section class="mt-10 w-full max-w-xl space-y-8">
-    <div>
-      <h2 class="text-2xl font-semibold text-gray-800 mb-3">Derivada (resultado directo)</h2>
-      <div id="resultadoDirecto" class="bg-white p-4 rounded shadow min-h-[3rem] text-xl text-blue-700"></div>
-    </div>
-    <div>
-      <h2 class="text-2xl font-semibold text-gray-800 mb-3">Explicación paso a paso</h2>
-      <div id="explicacionPasos" class="prose max-w-none bg-white p-4 rounded shadow min-h-[10rem] text-gray-800"></div>
-    </div>
-  </section>
-
-<script>
-// Genera explicación paso a paso simple para operadores básicos
-function explicar(expr, variable) {
-  if (expr.isConstantNode) return `La derivada de la constante \\(${expr.toTex()}\\) es \\(0\\).`;
-  if (expr.isSymbolNode) {
-    if (expr.name === variable) return `La derivada de \\(${variable}\\) con respecto a sí misma es \\(1\\).`;
-    else return `La derivada de \\(${expr.name}\\) con respecto a \\(${variable}\\) es \\(0\\) (constante).`;
-  }
-  if (expr.isOperatorNode) {
-    const op = expr.op;
-    const args = expr.args;
-    if (op === '+') {
-      return `La derivada de la suma es la suma de las derivadas:<br>
-        \\[
-        \\frac{d}{d${variable}} \\left(${expr.toTex()}\\right) = ${args.map(a => `\\frac{d}{d${variable}}(${a.toTex()})`).join(' + ')}
-        \\]<br>
-        Calculamos cada término:<br>${args.map(a => explicar(a, variable)).join('<br><br>')}`;
-    }
-    if (op === '-') {
-      return `La derivada de la resta es la resta de las derivadas:<br>
-        \\[
-        \\frac{d}{d${variable}} \\left(${expr.toTex()}\\right) = ${args.map(a => `\\frac{d}{d${variable}}(${a.toTex()})`).join(' - ')}
-        \\]<br>
-        Calculamos cada término:<br>${args.map(a => explicar(a, variable)).join('<br><br>')}`;
-    }
-    if (op === '*') {
-      const [f, g] = args;
-      return `Aplicando la regla del producto:<br>
-        \\[
-        \\frac{d}{d${variable}}(${expr.toTex()}) = 
-        \\frac{d}{d${variable}}(${f.toTex()}) \\cdot ${g.toTex()} + 
-        ${f.toTex()} \\cdot \\frac{d}{d${variable}}(${g.toTex()})
-        \\]<br>
-        Derivamos cada parte:<br>
-        - \\(\\frac{d}{d${variable}}(${f.toTex()})\\): ${explicar(f, variable)}<br><br>
-        - \\(\\frac{d}{d${variable}}(${g.toTex()})\\): ${explicar(g, variable)}`;
-    }
-    if (op === '^') {
-      const [base, exponente] = args;
-      if (exponente.isConstantNode) {
-        return `Regla de la potencia:<br>
-          \\[
-          \\frac{d}{d${variable}} \\left(${expr.toTex()}\\right) = ${exponente.toTex()} 
-          \\cdot ${base.toTex()}^{${exponente.value - 1}} \\cdot \\frac{d}{d${variable}}(${base.toTex()})
-          \\]<br>
-          Derivamos la base:<br>${explicar(base, variable)}`;
-      } else {
-        return 'Derivada con exponente variable no soportada en explicación.';
-      }
-    }
-  }
-  if (expr.isFunctionNode) {
-    const fn = expr.fn.name;
-    const arg = expr.args[0];
-    if (fn === 'sin') {
-      return `Derivada de \\(\\sin(${arg.toTex()})\\):<br>
-        \\[
-        \\frac{d}{d${variable}} \\sin(${arg.toTex()}) = \\cos(${arg.toTex()}) \\cdot \\frac{d}{d${variable}}(${arg.toTex()})
-        \\]<br>
-        Derivamos el argumento:<br>${explicar(arg, variable)}`;
-    }
-    if (fn === 'cos') {
-      return `Derivada de \\(\\cos(${arg.toTex()})\\):<br>
-        \\[
-        \\frac{d}{d${variable}} \\cos(${arg.toTex()}) = -\\sin(${arg.toTex()}) \\cdot \\frac{d}{d${variable}}(${arg.toTex()})
-        \\]<br>
-        Derivamos el argumento:<br>${explicar(arg, variable)}`;
-    }
-    if (fn === 'exp') {
-      return `Derivada de \\(e^{${arg.toTex()}}\\):<br>
-        \\[
-        \\frac{d}{d${variable}} e^{${arg.toTex()}} = e^{${arg.toTex()}} \\cdot \\frac{d}{d${variable}}(${arg.toTex()})
-        \\]<br>
-        Derivamos el argumento:<br>${explicar(arg, variable)}`;
-    }
-    if (fn === 'log') {
-      return `Derivada de \\(\\ln(${arg.toTex()})\\):<br>
-        \\[
-        \\frac{d}{d${variable}} \\ln(${arg.toTex()}) = \\frac{1}{${arg.toTex()}} \\cdot \\frac{d}{d${variable}}(${arg.toTex()})
-        \\]<br>
-        Derivamos el argumento:<br>${explicar(arg, variable)}`;
-    }
-    return `Función \\(${fn}\\) no soportada para explicación paso a paso.`;
-  }
-  return 'Paso a paso no disponible para esta expresión.';
-}
-
-document.getElementById('form').addEventListener('submit', e => {
-  e.preventDefault();
-  const funcionInput = document.getElementById('funcion').value;
-  const variableInput = document.getElementById('variable').value.trim();
-
-  const resultadoDirecto = document.getElementById('resultadoDirecto');
-  const explicacionPasos = document.getElementById('explicacionPasos');
-
-  try {
-    const expr = math.parse(funcionInput);
-    const derivada = math.derivative(expr, variableInput);
-
-    resultadoDirecto.innerHTML = `\\[ ${derivada.toTex()} \\]`;
-    explicacionPasos.innerHTML = explicar(expr, variableInput);
-
-    MathJax.typesetPromise();
-  } catch {
-    resultadoDirecto.textContent = 'Entrada inválida. Por favor verifique la función y variable.';
-    explicacionPasos.textContent = '';
-  }
-});
-</script>
+</div>
+<footer>© 2025 NaraNova - Todos los derechos reservados</footer>
 </body>
 </html>
